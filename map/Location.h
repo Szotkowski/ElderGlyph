@@ -9,6 +9,7 @@
 #include <optional>
 #include <vector>
 #include "Tile.h"
+#include "../inventory/Inventory.h"
 #include "../gold/Gold.h"
 #include "../player/Player.h"
 

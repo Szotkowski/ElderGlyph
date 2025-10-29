@@ -1,0 +1,16 @@
+#ifndef ELDERGLYPH_ANSICODES_H
+#define ELDERGLYPH_ANSICODES_H
+
+#define RESET_TEXT   "\033[0m"
+
+#define RED_NORMAL_TEXT   "\033[31m"
+#define GREEN_NORMAL_TEXT "\033[32m"
+#define YELLOW_NORMAL_TEXT "\033[33m"
+#define BLUE_NORMAL_TEXT  "\033[34m"
+
+#define RED_BOLD_TEXT     "\033[1;31m"
+#define GREEN_BOLD_TEXT   "\033[1;32m"
+#define YELLOW_BOLD_TEXT  "\033[1;33m"
+#define BLUE_BOLD_TEXT    "\033[1;34m"
+
+#endif // ELDERGLYPH_ANSICODES_H

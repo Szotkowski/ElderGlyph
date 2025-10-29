@@ -1,3 +1,0 @@
-C:/Users/Michael Szotkowski/CLionProjects/ElderGlyph/cmake-build-debug/CMakeFiles/ElderGlyph.dir
-C:/Users/Michael Szotkowski/CLionProjects/ElderGlyph/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/Michael Szotkowski/CLionProjects/ElderGlyph/cmake-build-debug/CMakeFiles/rebuild_cache.dir

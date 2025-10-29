@@ -61,9 +61,15 @@ add_executable(ElderGlyph main.cpp
         logger/Logger.cpp
         logger/Logger.h
         Menu.cpp
-        help/Help.cpp
-        help/Help.h
         resources.rc
+        main.cpp
+        ConsoleInitializer.cpp
+        ConsoleInitializer.h
+        AnsiCodes.h
+        MenuConstants.h
+        MenuTypes.h
+        GameEngineTypes.h
+        GameEngineConstants.h
 )
 
 set_target_properties(ElderGlyph PROPERTIES
