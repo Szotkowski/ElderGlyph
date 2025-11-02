@@ -1,6 +1,7 @@
-#include "Menu.h"
+#include "menu/Menu.h"
 #include "logger/Logger.h"
-#include "ConsoleInitializer.h"
+#include "console/ConsoleInitializer.h"
+#include "logger/LoggerMacros.h"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -14,6 +15,7 @@ int main()
     SetConsoleTitle("ElderGlyph");
     if (!Console::initialize())
     {
+        LOG_ERROR("Failed to initialize Windows console.");
         return 1;
     }
 #endif

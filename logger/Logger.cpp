@@ -1,48 +1,83 @@
-//
-// Created by Michael Szotkowski on 6/17/2024.
-//
-
 #include "Logger.h"
 
-Logger::Logger() {
+Logger::Logger()
+{
     std::filesystem::create_directories("logs");
 
     archiveLogFile();
 
-    // Open the log file in the logs directory
     logFile_.open("logs/latest.log", std::ios_base::app);
-    if (!logFile_.is_open()) {
-        std::cerr << RED_TEXT << "Unable to open log file!" << RESET_TEXT << std::endl;
+    if (!logFile_.is_open())
+    {
+        std::cerr << RED_NORMAL_TEXT << "Unable to open log file!" << RESET_TEXT << "\n";
     }
 }
 
-Logger::~Logger() {
-    if (logFile_.is_open()) {
+Logger::~Logger()
+{
+    if (logFile_.is_open())
+    {
         logFile_.close();
     }
 }
 
-Logger &Logger::getInstance() {
+Logger& Logger::getInstance()
+{
     static Logger instance;
     return instance;
 }
 
-void Logger::log(LogLevel level, const std::string& message) {
+void Logger::showLog()
+{
+#ifdef _WIN32
+
+    const std::string logFilePath = "logs\\latest.log";
+
+    if (!std::filesystem::exists(logFilePath))
+    {
+        std::cerr << RED_NORMAL_TEXT << "Log file not found: " << logFilePath << RESET_TEXT << "\n";
+        return;
+    }
+
+    const std::string command = "notepad.exe \"" + logFilePath + "\"";
+
+    STARTUPINFOA si = {sizeof(STARTUPINFOA)};
+    PROCESS_INFORMATION pi;
+
+    if (!CreateProcessA(nullptr, const_cast<char*>(command.c_str()), nullptr, nullptr, FALSE, 0, nullptr, nullptr, &si,
+                        &pi))
+    {
+        std::cerr << RED_NORMAL_TEXT << "CreateProcess failed (" << GetLastError() << ")." << RESET_TEXT << "\n";
+        return;
+    }
+
+    CloseHandle(pi.hProcess);
+    CloseHandle(pi.hThread);
+#else
+
+    std::cerr << RED_NORMAL_TEXT << "Log file viewer is only supported on Windows." << RESET_TEXT << "\n";
+#endif
+}
+
+void Logger::log(const LogLevel type, const std::string& message) {
     if (logFile_.is_open()) {
-        logFile_ << formatLogMessage(level, message) << std::endl;
+        logFile_ << formatLogMessage(type, message) << std::endl;
     } else {
-        std::cerr << RED_TEXT << "Unable to open log file!" << RESET_TEXT << std::endl;
+        std::cerr << "Unable to open log file!" << RESET_TEXT << std::endl;
     }
 }
 
-std::string Logger::formatLogMessage(LogLevel level, const std::string& message) {
+std::string Logger::formatLogMessage(const LogLevel type, const std::string& message)
+{
     std::ostringstream oss;
-    oss << "[" << logLevelToString(level) << ": " << getCurrentTime() << "] " << message;
+    oss << "[" << logLevelToString(type) << ": " << getCurrentTime() << "] " << message;
     return oss.str();
 }
 
-std::string Logger::logLevelToString(LogLevel level) {
-    switch (level) {
+std::string Logger::logLevelToString(const LogLevel type)
+{
+    switch (type)
+    {
     case Info:
         return "Info";
     case Error:
@@ -54,57 +89,45 @@ std::string Logger::logLevelToString(LogLevel level) {
     }
 }
 
-std::string Logger::getCurrentTime() {
-    auto now = std::chrono::system_clock::now();
+std::string Logger::getCurrentTime()
+{
+    std::lock_guard lock(logMutex_);
+
+    const auto now = std::chrono::system_clock::now();
     auto in_time_t = std::chrono::system_clock::to_time_t(now);
-    auto ms = std::chrono::duration_cast<std::chrono::microseconds>(now.time_since_epoch()) % 1000000;
+
+    std::tm local_tm{};
+#ifdef _WIN32
+
+    localtime_s(&local_tm, &in_time_t);
+#else
+
+    localtime_r(&in_time_t, &local_tm);
+#endif
+
+    const auto ms = std::chrono::duration_cast<std::chrono::microseconds>(now.time_since_epoch()) % 1000000;
 
     std::ostringstream oss;
-    oss << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d %H:%M:%S");
+    oss << std::put_time(&local_tm, "%Y-%m-%d %H:%M:%S");
     oss << '.' << std::setw(6) << std::setfill('0') << ms.count();
     return oss.str();
 }
 
+void Logger::archiveLogFile()
+{
+    std::lock_guard lock(logMutex_);
 
-void Logger::showLog() {
-    // Get the current working directory
-    char currentDir[MAX_PATH];
-    GetCurrentDirectory(MAX_PATH, currentDir);
-
-    // Set the log file path
-    std::string logFilePath = std::string(currentDir) + "\\logs\\latest.log";
-
-    // Check if the log file exists
-    if (GetFileAttributes(logFilePath.c_str()) == INVALID_FILE_ATTRIBUTES) {
-        std::cerr << RED_TEXT << "Log file not found: " << logFilePath << RESET_TEXT << std::endl;
-        return;
-    }
-
-    // Command to open the log file with Notepad
-    std::string command = "notepad \"" + logFilePath + "\"";
-
-    // Set up the process information
-    STARTUPINFO si = { sizeof(STARTUPINFO) };
-    PROCESS_INFORMATION pi;
-
-    // Create the process
-    if (!CreateProcess(NULL, const_cast<char*>(command.c_str()), NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
-        std::cerr << RED_TEXT << "CreateProcess failed (" << GetLastError() << ")." << RESET_TEXT << std::endl;
-        return;
-    }
-
-    // Close process and thread handles
-    CloseHandle(pi.hProcess);
-    CloseHandle(pi.hThread);
-}
-
-
-void Logger::archiveLogFile() {
-    const std::string logFilePath = "logs/latest.log";
-    if (std::filesystem::exists(logFilePath)) {
+    if (const std::string logFilePath = "logs/latest.log"; std::filesystem::exists(logFilePath))
+    {
         auto now = std::chrono::system_clock::now();
         auto in_time_t = std::chrono::system_clock::to_time_t(now);
-        std::tm local_tm = *std::localtime(&in_time_t);
+
+        std::tm local_tm{};
+#ifdef _WIN32
+        localtime_s(&local_tm, &in_time_t);
+#else
+        localtime_r(&in_time_t, &local_tm);
+#endif
 
         std::ostringstream date_oss;
         date_oss << std::put_time(&local_tm, "%Y-%m-%d");
@@ -113,12 +136,14 @@ void Logger::archiveLogFile() {
         int sequence_number = 1;
         std::string newLogFileName;
 
-        do {
+        do
+        {
             std::ostringstream new_oss;
             new_oss << "logs/" << "log-" << date_str << "-" << sequence_number << ".log";
             newLogFileName = new_oss.str();
             sequence_number++;
-        } while (std::filesystem::exists(newLogFileName));
+        }
+        while (std::filesystem::exists(newLogFileName));
 
         std::filesystem::rename(logFilePath, newLogFileName);
     }
