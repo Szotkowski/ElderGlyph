@@ -18,7 +18,7 @@ private:
 
     std::ofstream logFile_;
 
-    std::mutex logMutex_;
+    std::recursive_mutex logMutex_;
 
     std::string formatLogMessage(LogLevel type, const std::string &message);
 

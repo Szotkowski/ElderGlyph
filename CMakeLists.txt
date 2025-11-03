@@ -9,15 +9,15 @@ set(CMAKE_CXX_STANDARD 26)
 
 add_executable(ElderGlyph main.cpp
         AnsiCodes.h
-        console/ConsoleInitializer.cpp
-        console/ConsoleInitializer.h
+        console/core/ConsoleInitializer.cpp
+        console/core/ConsoleInitializer.h
         gameengine/GameEngine.cpp
         gameengine/GameEngine.h
         gameengine/GameEngineConstants.h
         KeyCodes.h
         menu/Menu.cpp
         menu/Menu.h
-        menu/MenuConstants.h
+        menu/GameEngineConstants.h
         menu/MenuTypes.h
         #entity/Entity.cpp
         #entity/Entity.h
@@ -69,12 +69,12 @@ add_executable(ElderGlyph main.cpp
         #player/Warrior.h
         resources.rc
         gameengine/GameEngineTypes.h
-        console/ConsoleUI.h
-        console/Console.h
-        console/ConsoleUI.cpp
+        console/ui/ConsoleUI.h
+        console/core/Console.h
+        console/ui/ConsoleUI.cpp
         logger/LoggerMacros.h
         logger/LoggerTypes.h
-        console/ConsoleUIConstants.h
+        console/ui/ConsoleUIConstants.h
 )
 
 set_target_properties(ElderGlyph PROPERTIES

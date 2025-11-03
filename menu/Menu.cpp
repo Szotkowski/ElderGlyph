@@ -26,6 +26,7 @@ void Menu::showMenu()
 
     int currentIndex = 0;
     bool shouldRedrawMenu = true;
+    constexpr int numOptions = GameEngineConstants::NUM_OPTIONS;
 
     do
     {
@@ -38,29 +39,20 @@ void Menu::showMenu()
             {
                 key = _getch();
             }
-
-            constexpr int numOptions = MenuConstants::NUM_OPTIONS;
-
-            switch (key)
+            if (key == 'w' || key == 'W' || key == static_cast<int>(Input::KeyCode::UP_ARROW))
             {
-            case 'w':
-            case 'W':
-            case static_cast<int>(Input::KeyCode::UP_ARROW):
                 currentIndex = (currentIndex == 0) ? numOptions - 1 : currentIndex - 1;
                 shouldRedrawMenu = true;
-                break;
-            case 's':
-            case 'S':
-            case static_cast<int>(Input::KeyCode::DOWN_ARROW):
+            }
+            else if (key == 's' || key == 'S' || key == static_cast<int>(Input::KeyCode::DOWN_ARROW))
+            {
                 currentIndex = (currentIndex == numOptions - 1) ? 0 : currentIndex + 1;
                 shouldRedrawMenu = true;
-                break;
-            case static_cast<int>(Input::KeyCode::ENTER):
+            }
+            else if (key == static_cast<int>(Input::KeyCode::ENTER))
+            {
                 handleOptionSelection(static_cast<MenuTypes::OptionIndex>(currentIndex));
                 shouldRedrawMenu = true;
-                break;
-            default:
-                break;
             }
         }
 
@@ -78,48 +70,21 @@ void Menu::showMenu()
 
 void Menu::drawFullMenu(const int currentIndex)
 {
-    constexpr int consoleWidth = Console::WIDTH;
-    constexpr int consoleHeight = Console::HEIGHT;
-    constexpr int numOptions = MenuConstants::NUM_OPTIONS;
-    constexpr int totalOptionsLines = numOptions + ((numOptions - 1) * MenuConstants::SEPARATOR_LINES);
-    constexpr int occupied_lines = MenuConstants::BORDER_LINES + MenuConstants::TITLE_LINE_COUNT + totalOptionsLines +
-        MenuConstants::LINE_PADDING_AFTER_TITLE;
-    constexpr int total_empty_space = std::max(0, consoleHeight - occupied_lines);
-    constexpr int numEmptyLines_top = total_empty_space / 2;
-    constexpr int numEmptyLines_bottom = total_empty_space - numEmptyLines_top;
-
-    ConsoleUI::drawHorizontalBorder(consoleWidth);
-    ConsoleUI::drawEmptyFrameLine(consoleWidth, std::max(0, numEmptyLines_top));
-    ConsoleUI::drawCenteredArt(
-        consoleWidth,
-        MenuConstants::TITLE_ART_WIDTH,
-        MenuConstants::TITLE_LINES,
+    ConsoleUI::drawFrameContent(
+        std::vector(
+            GameEngineConstants::TITLE_LINES.begin(),
+            GameEngineConstants::TITLE_LINES.end()
+        ),
+        GameEngineConstants::TITLE_ART_WIDTH,
+        GREEN_NORMAL_TEXT,
+        std::vector(
+            GameEngineConstants::OPTIONS.begin(),
+            GameEngineConstants::OPTIONS.end()
+        ),
+        currentIndex,
         GREEN_NORMAL_TEXT,
         RESET_TEXT
     );
-    ConsoleUI::drawEmptyFrameLine(consoleWidth, MenuConstants::LINE_PADDING_AFTER_TITLE);
-
-    for (int i = 0; i < numOptions; ++i)
-    {
-        const bool isSelected = i == currentIndex;
-
-        ConsoleUI::drawCenteredOption(
-            consoleWidth,
-            MenuConstants::OPTIONS[i],
-            isSelected,
-            GREEN_NORMAL_TEXT,
-            RESET_TEXT,
-            MenuConstants::PADDING_FACTOR
-        );
-
-        if (i < numOptions - 1)
-        {
-            ConsoleUI::drawEmptyFrameLine(consoleWidth, MenuConstants::SEPARATOR_LINES);
-        }
-    }
-
-    ConsoleUI::drawEmptyFrameLine(consoleWidth, std::max(0, numEmptyLines_bottom));
-    ConsoleUI::drawHorizontalBorder(consoleWidth, true);
 }
 
 void Menu::handleOptionSelection(const MenuTypes::OptionIndex option)
@@ -131,8 +96,8 @@ void Menu::handleOptionSelection(const MenuTypes::OptionIndex option)
         GameEngine::newGame();
         break;
     case MenuTypes::OptionIndex::LOAD_GAME:
-        LOG_INFO("Loading game.");
-        GameEngine::loadGame();
+        LOG_INFO("Loading games list.");
+        GameEngine::loadGames();
         break;
     case MenuTypes::OptionIndex::SETTINGS:
         LOG_INFO("Opening settings.");

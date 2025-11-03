@@ -1,9 +1,7 @@
 #ifndef ELDERGLYPH_CONSOLEINITIALIZER_H
 #define ELDERGLYPH_CONSOLEINITIALIZER_H
 
-#include "../logger/Logger.h"
-#include "../AnsiCodes.h"
-#include <iostream>
+#include "../../logger/LoggerMacros.h"
 #include "Console.h"
 
 #ifdef _WIN32

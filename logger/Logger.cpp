@@ -60,6 +60,8 @@ void Logger::showLog()
 }
 
 void Logger::log(const LogLevel type, const std::string& message) {
+    std::lock_guard lock(logMutex_);
+
     if (logFile_.is_open()) {
         logFile_ << formatLogMessage(type, message) << std::endl;
     } else {

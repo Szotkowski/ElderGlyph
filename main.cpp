@@ -1,7 +1,6 @@
-#include "menu/Menu.h"
-#include "logger/Logger.h"
-#include "console/ConsoleInitializer.h"
+#include "console/core/ConsoleInitializer.h"
 #include "logger/LoggerMacros.h"
+#include "menu/Menu.h"
 
 #ifdef _WIN32
 #include <windows.h>

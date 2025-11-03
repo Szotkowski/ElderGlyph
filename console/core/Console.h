@@ -1,8 +1,6 @@
 #ifndef ELDERGLYPH_CONSOLE_H
 #define ELDERGLYPH_CONSOLE_H
 
-#include <cstddef>
-
 namespace Console
 {
     constexpr int WIDTH = 120;

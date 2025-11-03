@@ -1,7 +1,4 @@
 #include "ConsoleInitializer.h"
-#include "../logger/Logger.h"
-#include "../console/ConsoleInitializer.h"
-#include "../logger/LoggerMacros.h"
 
 #ifdef _WIN32
 

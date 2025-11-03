@@ -2,12 +2,9 @@
 #define ELDERGLYPH_MENU_H
 
 #include "../gameengine/GameEngine.h"
+#include "../console/ui/ConsoleUI.h"
 #include "../logger/LoggerMacros.h"
-#include "../console/ConsoleUI.h"
-#include "../console/Console.h"
-#include "../logger/Logger.h"
-#include "MenuConstants.h"
-#include "../AnsiCodes.h"
+#include "GameEngineConstants.h"
 #include "MenuTypes.h"
 
 #ifdef _WIN32
