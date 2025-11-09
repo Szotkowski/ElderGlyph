@@ -4,7 +4,7 @@
 #include "../gameengine/GameEngine.h"
 #include "../console/ui/ConsoleUI.h"
 #include "../logger/LoggerMacros.h"
-#include "GameEngineConstants.h"
+#include "MenuConstants.h"
 #include "MenuTypes.h"
 
 #ifdef _WIN32
@@ -18,10 +18,6 @@ private:
     Menu();
 
     ~Menu();
-
-    static void drawFullMenu(int currentIndex);
-
-    static void handleOptionSelection(MenuTypes::OptionIndex option);
 
 public:
     static Menu& getInstance();

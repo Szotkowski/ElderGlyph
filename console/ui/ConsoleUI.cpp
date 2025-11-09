@@ -49,12 +49,24 @@ namespace ConsoleUI
                          const std::vector<std::string_view>& artLines,
                          const std::string_view artColor, const std::string_view resetColor)
     {
-        int padding = (static_cast<int>(consoleWidth) - static_cast<int>(artWidth)) / 2 - 1;
-        if (padding < 0) padding = 0;
+        const int totalPaddingSpace = static_cast<int>(consoleWidth) - static_cast<int>(artWidth) - 2;
+        if (totalPaddingSpace < 0)
+        {
+            for (const auto& line : artLines)
+            {
+                std::cout << "#" << artColor << line << resetColor << "#" << "\n";
+            }
+            return;
+        }
+
+        const int leftPadding = totalPaddingSpace / 2;
+        const int rightPadding = totalPaddingSpace / 2 + (totalPaddingSpace % 2);
 
         for (const auto& line : artLines)
         {
-            std::cout << "#" << artColor << std::string(padding, ' ') << line << resetColor << std::string(padding, ' ') << "#" << "\n";
+            std::cout << "#" << artColor << std::string(leftPadding, ' ');
+            std::cout << line << resetColor;
+            std::cout << std::string(rightPadding, ' ') << "#" << "\n";
         }
     }
 
@@ -119,5 +131,91 @@ namespace ConsoleUI
 
         drawEmptyFrameLine(consoleWidth, numEmptyLines_bottom);
         drawHorizontalBorder(consoleWidth, true);
+    }
+
+    void runGenericMenu(
+        const std::vector<std::string_view>& titleLines,
+        const std::size_t titleArtWidth,
+        const std::vector<std::string_view>& options,
+        const std::vector<std::function<void()>>& actions,
+        const bool allowEscExit
+    )
+    {
+        if (options.empty() || options.size() != actions.size()) {
+            std::cerr << "Error: Invalid menu options or action list provided.\n";
+            return;
+        }
+
+#ifndef _WIN32
+        std::cout << "Menu functionality is currently Windows-dependent.\n";
+        return;
+#else
+        const HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+
+        int currentIndex = 0;
+        bool shouldRedrawMenu = true;
+        bool menuActive = true;
+        const int numOptions = static_cast<int>(options.size());
+
+        do
+        {
+            if (_kbhit())
+            {
+                int key = _getch();
+
+                if (key == static_cast<int>(Input::KeyCode::EXTENDED_KEY_1) ||
+                    key == static_cast<int>(Input::KeyCode::EXTENDED_KEY_2))
+                {
+                    key = _getch();
+                }
+
+                if (key == 'w' || key == 'W' || key == static_cast<int>(Input::KeyCode::UP_ARROW))
+                {
+                    currentIndex = (currentIndex == 0) ? numOptions - 1 : currentIndex - 1;
+                    shouldRedrawMenu = true;
+                }
+                else if (key == 's' || key == 'S' || key == static_cast<int>(Input::KeyCode::DOWN_ARROW))
+                {
+                    currentIndex = (currentIndex == numOptions - 1) ? 0 : currentIndex + 1;
+                    shouldRedrawMenu = true;
+                }
+                else if (key == static_cast<int>(Input::KeyCode::ENTER))
+                {
+                    actions[currentIndex]();
+
+                    if (options[currentIndex] == "Back" || options[currentIndex] == "Back to menu" ||
+                        options[currentIndex] == "No")
+                    {
+                        menuActive = false;
+                    }
+                    else
+                    {
+                        shouldRedrawMenu = true;
+                    }
+                }
+                else if (key == static_cast<int>(Input::KeyCode::ESC) && allowEscExit)
+                {
+                    menuActive = false;
+                }
+            }
+
+            if (shouldRedrawMenu)
+            {
+                drawFrameContent(
+                    titleLines,
+                    titleArtWidth,
+                    GREEN_NORMAL_TEXT,
+                    options,
+                    currentIndex,
+                    GREEN_NORMAL_TEXT,
+                    RESET_TEXT
+                );
+                shouldRedrawMenu = false;
+            }
+
+            FlushConsoleInputBuffer(hConsole);
+        }
+        while (menuActive);
+#endif
     }
 }

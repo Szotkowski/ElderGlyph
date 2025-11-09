@@ -2,11 +2,19 @@
 #define ELDERGLYPH_CONSOLEUI_H
 
 #include "ConsoleUIConstants.h"
+#include "../../AnsiCodes.h"
 #include "../core/Console.h"
+#include "../../KeyCodes.h"
 #include <string_view>
+#include <functional>
 #include <iostream>
 #include <iomanip>
 #include <vector>
+
+#ifdef _WIN32
+#include <windows.h>
+#include <conio.h>
+#endif
 
 namespace ConsoleUI
 {
@@ -29,6 +37,14 @@ namespace ConsoleUI
         int selectedIndex,
         std::string_view selectedColor,
         std::string_view resetColor
+    );
+
+    void runGenericMenu(
+        const std::vector<std::string_view>& titleLines,
+        size_t titleArtWidth,
+        const std::vector<std::string_view>& options,
+        const std::vector<std::function<void()>>& actions,
+        bool allowEscExit = true
     );
 }
 

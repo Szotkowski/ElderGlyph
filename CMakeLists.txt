@@ -17,56 +17,56 @@ add_executable(ElderGlyph main.cpp
         KeyCodes.h
         menu/Menu.cpp
         menu/Menu.h
-        menu/GameEngineConstants.h
+        menu/MenuConstants.h
         menu/MenuTypes.h
-        #entity/Entity.cpp
-        #entity/Entity.h
-        #gold/Gold.cpp
-        #gold/Gold.h
-        #inventory/Inventory.cpp
-        #inventory/Inventory.h
-        #item/Armor.cpp
-        #item/Armor.h
-        #item/Item.cpp
-        #item/Item.h
-        #item/ItemFactory.cpp
-        #item/ItemFactory.h
-        #item/Potion.cpp
-        #item/Potion.h
-        #item/Weapon.cpp
-        #item/Weapon.h
+        entity/Entity.cpp
+        entity/Entity.h
+        gold/Gold.cpp
+        gold/Gold.h
+        inventory/Inventory.cpp
+        inventory/Inventory.h
+        item/Armor.cpp
+        item/Armor.h
+        item/Item.cpp
+        item/Item.h
+        item/ItemFactory.cpp
+        item/ItemFactory.h
+        item/Potion.cpp
+        item/Potion.h
+        item/Weapon.cpp
+        item/Weapon.h
         logger/Logger.cpp
         logger/Logger.h
-        #map/DefaultLocationBuilder.cpp
-        #map/DefaultLocationBuilder.h
-        #map/Location.cpp
-        #map/Location.h
-        #map/LocationBuilder.cpp
-        #map/LocationBuilder.h
-        #map/LocationDirector.cpp
-        #map/LocationDirector.h
-        #map/Map.cpp
-        #map/Map.h
-        #map/Tile.cpp
-        #map/Tile.h
-        #monster/Dragon.cpp
-        #monster/Dragon.h
-        #monster/Goblin.cpp
-        #monster/Goblin.h
-        #monster/Monster.cpp
-        #monster/Monster.h
-        #monster/MonsterFactory.cpp
-        #monster/MonsterFactory.h
-        #monster/Troll.cpp
-        #monster/Troll.h
-        #player/Archer.cpp
-        #player/Archer.h
-        #player/Mage.cpp
-        #player/Mage.h
-        #player/Player.cpp
-        #player/Player.h
-        #player/Warrior.cpp
-        #player/Warrior.h
+        map/DefaultLocationBuilder.cpp
+        map/DefaultLocationBuilder.h
+        map/Location.cpp
+        map/Location.h
+        map/LocationBuilder.cpp
+        map/LocationBuilder.h
+        map/LocationDirector.cpp
+        map/LocationDirector.h
+        map/Map.cpp
+        map/Map.h
+        map/Tile.cpp
+        map/Tile.h
+        monster/Dragon.cpp
+        monster/Dragon.h
+        monster/Goblin.cpp
+        monster/Goblin.h
+        monster/Monster.cpp
+        monster/Monster.h
+        monster/MonsterFactory.cpp
+        monster/MonsterFactory.h
+        monster/Troll.cpp
+        monster/Troll.h
+        player/Archer.cpp
+        player/Archer.h
+        player/Mage.cpp
+        player/Mage.h
+        player/Player.cpp
+        player/Player.h
+        player/Warrior.cpp
+        player/Warrior.h
         resources.rc
         gameengine/GameEngineTypes.h
         console/ui/ConsoleUI.h
